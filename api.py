@@ -4,7 +4,7 @@ from sqlalchemy import exc
 import json
 from flask_cors import CORS
 
-from database.models import db_drop_and_create_all, setup_db, Drink
+from database.models import db, setup_db, Drink
 from auth.auth import AuthError, requires_auth
 
 
@@ -18,6 +18,10 @@ CORS(app, resources={r"/api/*": {"origins": "*"}})
 !! NOTE THIS MUST BE UNCOMMENTED ON FIRST RUN
 """
 # db_drop_and_create_all()
+try:
+    Drink.query.all()
+except Exception:
+    db.create_all()
 
 ## ROUTES
 """
