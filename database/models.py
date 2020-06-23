@@ -38,19 +38,18 @@ class Drink(db.Model):
     title = Column(String(80), unique=True)
     # the ingredients blob - this stores a lazy json blob
     # the required datatype is [{'color': string, 'name':string, 'parts':number}]
-    recipe =  Column(String(180), nullable=False)
+    ingredients =  Column(String(180), nullable=False)
 
     '''
     short()
         short form representation of the Drink model
     '''
     def short(self):
-        print(json.loads(self.recipe))
-        short_recipe = [{'color': r['color'], 'parts': r['parts']} for r in json.loads(self.recipe)]
+        short_ingredients= [{'color': r['color'], 'parts': r['parts']} for r in json.loads(self.ingredients)]
         return {
             'id': self.id,
             'title': self.title,
-            'recipe': short_recipe
+            'ingredients': short_ingredients
         }
 
     '''
@@ -61,7 +60,7 @@ class Drink(db.Model):
         return {
             'id': self.id,
             'title': self.title,
-            'recipe': json.loads(self.recipe)
+            'ingredients': json.loads(self.ingredients)
         }
 
     '''
@@ -70,7 +69,7 @@ class Drink(db.Model):
         the model must have a unique name
         the model must have a unique id or null id
         EXAMPLE
-            drink = Drink(title=req_title, recipe=req_recipe)
+            drink = Drink(title=req_title, ingredients=req_ingredients)
             drink.insert()
     '''
     def insert(self):
@@ -82,7 +81,7 @@ class Drink(db.Model):
         deletes a new model into a database
         the model must exist in the database
         EXAMPLE
-            drink = Drink(title=req_title, recipe=req_recipe)
+            drink = Drink(title=req_title, ingredients=req_ingredients)
             drink.delete()
     '''
     def delete(self):
