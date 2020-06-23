@@ -4,8 +4,8 @@ from sqlalchemy import exc
 import json
 from flask_cors import CORS
 
-from database.models import db_drop_and_create_all, setup_db, Drink
-from auth.auth import AuthError, requires_auth
+from .database.models import db_drop_and_create_all, setup_db, Drink
+from .auth.auth import AuthError, requires_auth
 
 
 app = Flask(__name__)
@@ -33,7 +33,7 @@ CORS(app, resources={r"/api/*": {"origins": "*"}})
 @app.route("/api/drinks")
 def get_drinks():
     try:
-        drinks = [_.short() for _ in Drink.query.all()]
+        drinks = [_.long() for _ in Drink.query.all()]
 
         return jsonify({"drinks": drinks})
     except:
@@ -79,7 +79,7 @@ def get_drinks_detail(jwt):
 def create_drinks(jwt):
     try:
         drink = Drink(
-            title=request.json["title"], recipe=json.dumps(request.json["recipe"])
+            title=request.json["title"], ingredients=json.dumps(request.json["ingredients"])
         )
         drink.insert()
 
@@ -109,8 +109,8 @@ def update_drink(jwt, drink_id):
         drink = Drink.query.filter(Drink.id == drink_id).first()
         if "title" in request.json:
             drink.title = request.json["title"]
-        if "recipe" in request.json:
-            drink.recipe = json.dumps(request.json["recipe"])
+        if "ingredients" in request.json:
+            drink.ingredients = json.dumps(request.json["ingredients"])
         drink.update()
 
         return jsonify({"success": True, "drinks": [drink.long()]})
