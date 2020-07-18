@@ -1,186 +1,114 @@
-from flask import Blueprint, jsonify, abort
+import json
+from flask import Blueprint, jsonify, abort, request, current_app as context
+from sqlalchemy.exc import IntegrityError, OperationalError
+from sqlalchemy.orm.exc import NoResultFound
 
 from src.database.models import Latte
-from src.auth.auth import AuthError, requires_auth
+from src.auth.auth import requires_auth
+
 
 profile = Blueprint("profile", __name__)
 
 
-@profile.route("/api/lattes")
+@profile.route("/api/latte")
 def get_lattes():
+    """Return lattes from database"""
     try:
         lattes = [_.long() for _ in Latte.query.all()]
-
         return jsonify({"lattes": lattes})
-    except:
-        # If there's a database error.
+    except OperationalError as err:
+        context.logger.warning(err)
+        abort(502)
+    except Exception as err:
+        context.logger.warning(err)
         abort(500)
 
 
-"""
-@TODO implement endpoint
-    GET /lattes-detail
-        it should require the 'get:lattes-detail' permission
-        it should contain the drink.long() data representation
-    returns status code 200 and json {"success": True, "lattes": lattes} where lattes is the list of lattes
-        or appropriate status code indicating reason for failure
-"""
-
-
-@profile.route("/api/lattes-detail")
-@requires_auth(permission="get:lattes-detail")
-def get_lattes_detail(jwt):
+@profile.route("/api/latte/<int:latte_id>")
+def get_latte(latte_id):
+    """Return a latte from database"""
     try:
-        lattes = [_.long() for _ in Latte.query.all()]
-
-        return jsonify({"success": True, "lattes": lattes})
-    except:
-        # If there's a database error.
+        latte = Latte.query.filter(Latte.id == latte_id).one()
+        return jsonify({"lattes": latte.long()})
+    except NoResultFound as err:
+        context.logger.warning(err)
+        abort(404)
+    except OperationalError as err:
+        context.logger.warning(err)
+        abort(502)
+    except Exception as err:
+        context.logger.warning(err)
         abort(500)
 
 
-"""
-@TODO implement endpoint
-    POST /lattes
-        it should create a new row in the lattes table
-        it should require the 'post:lattes' permission
-        it should contain the drink.long() data representation
-    returns status code 200 and json {"success": True, "lattes": drink} where drink an array containing only the newly created drink
-        or appropriate status code indicating reason for failure
-"""
-
-
-@profile.route("/api/lattes", methods=["POST"])
-@requires_auth(permission="post:lattes")
+@profile.route("/api/latte", methods=["POST"])
+@requires_auth(permission="post:latte")
 def create_lattes(jwt):
+    """Create new latte"""
     try:
-        drink = Drink(
+        latte = Latte(
             title=request.json["title"],
             ingredients=json.dumps(request.json["ingredients"]),
         )
-        drink.insert()
+        latte.insert()
 
-        return jsonify({"success": True, "lattes": [drink.long()]})
-    except:
-        # If the payload is malformed.
+        return jsonify({"success": True, "lattes": [latte.long()]})
+    except KeyError as err:
+        context.logger.warning(err)
         abort(400)
+    except IntegrityError as err:
+        context.logger.warning(err)
+        abort(409)
+    except OperationalError as err:
+        context.logger.warning(err)
+        abort(502)
+    except Exception as err:
+        context.logger.warning(err)
+        abort(500)
 
 
-"""
-@TODO implement endpoint
-    PATCH /lattes/<id>
-        where <id> is the existing model id
-        it should respond with a 404 error if <id> is not found
-        it should update the corresponding row for <id>
-        it should require the 'patch:lattes' permission
-        it should contain the drink.long() data representation
-    returns status code 200 and json {"success": True, "lattes": drink} where drink an array containing only the updated drink
-        or appropriate status code indicating reason for failure
-"""
-
-
-@profile.route("/api/lattes/<int:drink_id>", methods=["PATCH"])
-@requires_auth(permission="patch:lattes")
-def update_drink(jwt, drink_id):
+@profile.route("/api/latte/<int:latte_id>", methods=["PATCH"])
+@requires_auth(permission="patch:latte")
+def update_drink(jwt, latte_id):
+    """Update latte information"""
     try:
-        drink = Latte.query.filter(Latte.id == drink_id).first()
+        latte = Latte.query.filter(Latte.id == latte_id).one()
         if "title" in request.json:
-            drink.title = request.json["title"]
+            latte.title = request.json["title"]
         if "ingredients" in request.json:
-            drink.ingredients = json.dumps(request.json["ingredients"])
-        drink.update()
+            latte.ingredients = json.dumps(request.json["ingredients"])
+        latte.update()
 
-        return jsonify({"success": True, "lattes": [drink.long()]})
-    except:
-        # If the payload is malformed.
+        return jsonify({"success": True, "lattes": [latte.long()]})
+    except KeyError as err:
+        context.logger.warning(err)
         abort(400)
+    except NoResultFound as err:
+        context.logger.warning(err)
+        abort(404)
+    except OperationalError as err:
+        context.logger.warning(err)
+        abort(502)
+    except Exception as err:
+        context.logger.warning(err)
+        abort(500)
 
 
-"""
-@TODO implement endpoint
-    DELETE /lattes/<id>
-        where <id> is the existing model id
-        it should respond with a 404 error if <id> is not found
-        it should delete the corresponding row for <id>
-        it should require the 'delete:lattes' permission
-    returns status code 200 and json {"success": True, "delete": id} where id is the id of the deleted record
-        or appropriate status code indicating reason for failure
-"""
-
-
-@profile.route("/api/lattes/<int:drink_id>", methods=["DELETE"])
-@requires_auth(permission="delete:lattes")
-def remove_drink(jwt, drink_id):
+@profile.route("/api/latte/<int:latte_id>", methods=["DELETE"])
+@requires_auth(permission="delete:latte")
+def remove_drink(jwt, latte_id):
+    """Remove latte based on its id"""
     try:
-        drink = Latte.query.filter(Latte.id == drink_id).first()
-        drink.delete()
+        latte = Latte.query.filter(Latte.id == latte_id).one()
+        latte.delete()
 
-        return jsonify({"success": True, "delete": drink_id})
-    except:
-        # If the id does not match any drink in the database.
-        abort(400)
-
-
-## Error Handling
-"""
-Example error handling for unprocessable entity
-"""
-
-
-@profile.errorhandler(422)
-def unprocessable(error):
-    return jsonify({"success": False, "error": 422, "message": "unprocessable"}), 422
-
-
-"""
-@TODO implement error handlers using the @profile.errorhandler(error) decorator
-    each error handler should return (with approprate messages):
-             jsonify({
-                    "success": False, 
-                    "error": 404,
-                    "message": "resource not found"
-                    }), 404
-
-"""
-
-
-@profile.errorhandler(401)
-def unprocessable(error):
-    return jsonify({"success": False, "error": 401, "message": "Unauthorized"}), 401
-
-
-"""
-@TODO implement error handler for 404
-    error handler should conform to general task above 
-"""
-
-
-@profile.errorhandler(404)
-def unprocessable(error):
-    return jsonify({"success": False, "error": 404, "message": "Not found"}), 404
-
-
-"""
-@TODO implement error handler for AuthError
-    error handler should conform to general task above 
-"""
-
-
-@profile.errorhandler(AuthError)
-def unprocessable(error):
-    return (
-        jsonify(
-            {"success": False, "error": error.status_code, "message": error.error,}
-        ),
-        error.status_code,
-    )
-
-
-@profile.errorhandler(500)
-def unprocessable(error):
-    return jsonify({"success": False, "error": 500, "message": "Server error"}), 500
-
-
-@profile.errorhandler(400)
-def unprocessable(error):
-    return jsonify({"success": False, "error": 400, "message": "Bad request"}), 400
+        return jsonify({"success": True, "delete": latte_id})
+    except NoResultFound as err:
+        context.logger.warning(err)
+        abort(404)
+    except OperationalError as err:
+        context.logger.warning(err)
+        abort(502)
+    except Exception as err:
+        context.logger.warning(err)
+        abort(500)
