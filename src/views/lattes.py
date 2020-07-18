@@ -52,7 +52,7 @@ def create_lattes(jwt):
         )
         latte.insert()
 
-        return jsonify({"success": True, "lattes": [latte.long()]})
+        return jsonify({"success": True, "lattes": [latte.long()]}), 201
     except KeyError as err:
         context.logger.warning(err)
         abort(400)

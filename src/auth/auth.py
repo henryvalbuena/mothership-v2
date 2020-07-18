@@ -7,7 +7,7 @@ from urllib.request import urlopen
 
 AUTH0_DOMAIN = "coffe-shop-project.auth0.com"
 ALGORITHMS = ["RS256"]
-API_AUDIENCE = "drinks"
+API_AUDIENCE = "drinks" # Should be lattes
 
 
 class AuthError(Exception):
