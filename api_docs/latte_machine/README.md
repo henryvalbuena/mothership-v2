@@ -78,7 +78,7 @@ curl --location --request GET 'localhost:5000/api/latte/1'
 ```
 
 **POST /api/latte**
-Get a specific latte
+Create new latte
 
 ```bash
 curl --location --request POST 'localhost:5000/api/latte' \
@@ -121,7 +121,7 @@ curl --location --request POST 'localhost:5000/api/latte' \
 ```
 
 **DELETE /api/latte/1**
-Get a specific latte
+Remove latte from database
 
 ```bash
 curl --location --request DELETE 'localhost:5000/api/latte/1' \
@@ -138,7 +138,7 @@ curl --location --request DELETE 'localhost:5000/api/latte/1' \
 ```
 
 **PATCH /api/latte/1**
-Get a specific latte
+Update latte content
 
 ```bash
 curl --location --request PATCH 'localhost:5000/api/latte/1' \
