@@ -6,6 +6,9 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class Config(object):
     """Base configuration"""
 
+    SQLALCHEMY_DATABASE_URI = os.environ["DATABASE_URL"]
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+
 
 class ProductionConfig(Config):
     """Production configuration"""
@@ -13,9 +16,6 @@ class ProductionConfig(Config):
 
 class DevelopmentConfig(Config):
     """Development configuration"""
-
-    SQLALCHEMY_DATABASE_URI = os.environ["DATABASE_URL"]
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
 class TestingConfig(Config):
