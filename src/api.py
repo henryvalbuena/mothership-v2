@@ -32,7 +32,7 @@ def create_app(config_name: str) -> Flask:
     @app.errorhandler(405)
     def _handle_api_error(err):
         "Necessary when using blueprints"
-        app.logger.warning(str(err))
+        app.logger.error(str(err))
         return jsonify({"error": err.code, "message": err.description}), err.code
 
     return app

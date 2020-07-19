@@ -9,8 +9,8 @@ migrate = Migrate()
 
 
 """
-Drink
-a persistent drink entity, extends the base SQLAlchemy Model
+Latte
+a persistent Latte entity, extends the base SQLAlchemy Model
 """
 
 
@@ -22,18 +22,10 @@ class Latte(db.Model):
     title = Column(String(80), unique=True)
     # the ingredients blob - this stores a lazy json blob
     # the required datatype is [{'color': string, 'name':string, 'parts':number}]
-    ingredients = Column(String(180), nullable=False)
-
-    def short(self):
-        """short form representation of the Drink model"""
-        short_ingredients = [
-            {"color": r["color"], "parts": r["parts"]}
-            for r in json.loads(self.ingredients)
-        ]
-        return {"id": self.id, "title": self.title, "ingredients": short_ingredients}
+    ingredients = Column(String(300), nullable=False)
 
     def long(self):
-        """long form representation of the Drink model"""
+        """long form representation of the Latte model"""
         return {
             "id": self.id,
             "title": self.title,
@@ -45,8 +37,8 @@ class Latte(db.Model):
         the model must have a unique name
         the model must have a unique id or null id
         Examples:
-            drink = Drink(title=req_title, ingredients=req_ingredients)
-            drink.insert()
+            Latte = Latte(title=req_title, ingredients=req_ingredients)
+            Latte.insert()
         """
         db.session.add(self)
         db.session.commit()
@@ -55,8 +47,8 @@ class Latte(db.Model):
         """deletes a new model into a database
             the model must exist in the database
             Examples:
-                drink = Drink(title=req_title, ingredients=req_ingredients)
-                drink.delete()
+                Latte = Latte(title=req_title, ingredients=req_ingredients)
+                Latte.delete()
         """
         db.session.delete(self)
         db.session.commit()
@@ -65,9 +57,9 @@ class Latte(db.Model):
         """updates a new model into a database
             the model must exist in the database
             Examples:
-                drink = Drink.query.filter(Drink.id == id).one_or_none()
-                drink.title = 'Black Coffee'
-                drink.update()
+                Latte = Latte.query.filter(Latte.id == id).one_or_none()
+                Latte.title = 'Black Coffee'
+                Latte.update()
         """
         db.session.commit()
 

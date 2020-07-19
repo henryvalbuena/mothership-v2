@@ -1,10 +1,14 @@
+import re
 import json
+
 from flask import Blueprint, jsonify, abort, request, current_app as context
-from sqlalchemy.exc import IntegrityError, OperationalError
+from sqlalchemy.exc import DataError, IntegrityError, OperationalError
 from sqlalchemy.orm.exc import NoResultFound
 
 from src.database.models import Latte
 from src.auth.auth import requires_auth
+from src.helpers.tools import validate_none_word_input
+from src.helpers.errors import InvalidUserInput
 
 
 profile = Blueprint("profile", __name__)
@@ -17,10 +21,10 @@ def get_lattes():
         lattes = [_.long() for _ in Latte.query.all()]
         return jsonify({"lattes": lattes})
     except OperationalError as err:
-        context.logger.warning(err)
+        context.logger.error(err)
         abort(502)
     except Exception as err:
-        context.logger.warning(err)
+        context.logger.error(err)
         abort(500)
 
 
@@ -31,13 +35,13 @@ def get_latte(latte_id):
         latte = Latte.query.filter(Latte.id == latte_id).one()
         return jsonify({"lattes": latte.long()})
     except NoResultFound as err:
-        context.logger.warning(err)
+        context.logger.error(err)
         abort(404)
     except OperationalError as err:
-        context.logger.warning(err)
+        context.logger.error(err)
         abort(502)
     except Exception as err:
-        context.logger.warning(err)
+        context.logger.error(err)
         abort(500)
 
 
@@ -46,24 +50,25 @@ def get_latte(latte_id):
 def create_lattes(jwt):
     """Create new latte"""
     try:
-        latte = Latte(
-            title=request.json["title"],
-            ingredients=json.dumps(request.json["ingredients"]),
-        )
+        rawIng = json.dumps(request.json["ingredients"])
+        validIng = validate_none_word_input(rawIng)
+        rawTitle = request.json["title"]
+        validTitle = validate_none_word_input(rawTitle)
+        latte = Latte(title=validTitle, ingredients=validIng,)
         latte.insert()
 
         return jsonify({"success": True, "lattes": [latte.long()]}), 201
-    except KeyError as err:
-        context.logger.warning(err)
+    except (KeyError, InvalidUserInput, DataError) as err:
+        context.logger.error(err)
         abort(400)
     except IntegrityError as err:
-        context.logger.warning(err)
+        context.logger.error(err)
         abort(409)
     except OperationalError as err:
-        context.logger.warning(err)
+        context.logger.error(err)
         abort(502)
     except Exception as err:
-        context.logger.warning(err)
+        context.logger.error(err)
         abort(500)
 
 
@@ -74,23 +79,25 @@ def update_drink(jwt, latte_id):
     try:
         latte = Latte.query.filter(Latte.id == latte_id).one()
         if "title" in request.json:
-            latte.title = request.json["title"]
+            validTitle = validate_none_word_input(request.json["title"])
+            latte.title = validTitle
         if "ingredients" in request.json:
-            latte.ingredients = json.dumps(request.json["ingredients"])
+            validIng = validate_none_word_input(json.dumps(request.json["ingredients"]))
+            latte.ingredients = validIng
         latte.update()
 
         return jsonify({"success": True, "lattes": [latte.long()]})
-    except KeyError as err:
-        context.logger.warning(err)
+    except (KeyError, InvalidUserInput, DataError) as err:
+        context.logger.error(err)
         abort(400)
     except NoResultFound as err:
-        context.logger.warning(err)
+        context.logger.error(err)
         abort(404)
     except OperationalError as err:
-        context.logger.warning(err)
+        context.logger.error(err)
         abort(502)
     except Exception as err:
-        context.logger.warning(err)
+        context.logger.error(err)
         abort(500)
 
 
@@ -104,11 +111,11 @@ def remove_drink(jwt, latte_id):
 
         return jsonify({"success": True, "delete": latte_id})
     except NoResultFound as err:
-        context.logger.warning(err)
+        context.logger.error(err)
         abort(404)
     except OperationalError as err:
-        context.logger.warning(err)
+        context.logger.error(err)
         abort(502)
     except Exception as err:
-        context.logger.warning(err)
+        context.logger.error(err)
         abort(500)
