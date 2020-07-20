@@ -1,4 +1,3 @@
-import re
 import json
 
 from flask import Blueprint, jsonify, abort, request, current_app as context
@@ -51,10 +50,9 @@ def create_lattes(jwt):
     """Create new latte"""
     try:
         rawIng = json.dumps(request.json["ingredients"])
-        validIng = validate_none_word_input(rawIng)
         rawTitle = request.json["title"]
         validTitle = validate_none_word_input(rawTitle)
-        latte = Latte(title=validTitle, ingredients=validIng,)
+        latte = Latte(title=validTitle, ingredients=rawIng,)
         latte.insert()
 
         return jsonify({"success": True, "lattes": [latte.long()]}), 201
@@ -81,9 +79,11 @@ def update_drink(jwt, latte_id):
         if "title" in request.json:
             validTitle = validate_none_word_input(request.json["title"])
             latte.title = validTitle
-        if "ingredients" in request.json:
-            validIng = validate_none_word_input(json.dumps(request.json["ingredients"]))
+        elif "ingredients" in request.json:
+            validIng = json.dumps(request.json["ingredients"])
             latte.ingredients = validIng
+        else:
+            raise KeyError
         latte.update()
 
         return jsonify({"success": True, "lattes": [latte.long()]})
