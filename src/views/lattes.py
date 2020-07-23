@@ -49,10 +49,10 @@ def get_latte(latte_id):
 def create_lattes(jwt):
     """Create new latte"""
     try:
-        rawIng = json.dumps(request.json["ingredients"])
+        ingredients = json.dumps(request.json["ingredients"])
         rawTitle = request.json["title"]
         validTitle = validate_none_word_input(rawTitle)
-        latte = Latte(title=validTitle, ingredients=rawIng,)
+        latte = Latte(title=validTitle, ingredients=ingredients,)
         latte.insert()
 
         return jsonify({"success": True, "lattes": [latte.long()]}), 201
@@ -75,15 +75,16 @@ def create_lattes(jwt):
 def update_drink(jwt, latte_id):
     """Update latte information"""
     try:
+        if "title" not in request.json and "ingredients" not in request.json:
+            raise KeyError
+
         latte = Latte.query.filter(Latte.id == latte_id).one()
         if "title" in request.json:
             validTitle = validate_none_word_input(request.json["title"])
             latte.title = validTitle
-        elif "ingredients" in request.json:
+        if "ingredients" in request.json:
             validIng = json.dumps(request.json["ingredients"])
             latte.ingredients = validIng
-        else:
-            raise KeyError
         latte.update()
 
         return jsonify({"success": True, "lattes": [latte.long()]})

@@ -1,13 +1,11 @@
 """Testing module for latte api endpoints"""
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
-from sqlalchemy.exc import OperationalError
+from sqlalchemy.exc import OperationalError, IntegrityError
 from sqlalchemy.orm.exc import NoResultFound
 
 from tests.conftest import (
     DummyLatte,
-    DuplicatedLatte,
-    OperationalErrLatte,
     invalid_payload,
     dummy_latte_instance,
     dummy_payload,
@@ -78,7 +76,7 @@ def test_400_api_latte_post(app):
     with app.test_client() as client:
         res = client.post(
             "/api/latte",
-            json=wrong_payload,
+            json=invalid_payload,
             headers={"Authorization": f"Bearer {token}"},
         )
     json_data = res.get_json()
@@ -86,7 +84,9 @@ def test_400_api_latte_post(app):
     assert json_data["success"] is False
 
 
-@patch("src.views.lattes.Latte", DuplicatedLatte)
+@patch(
+    "src.views.lattes.Latte", MagicMock(side_effect=IntegrityError("err", "err", "err"))
+)
 def test_409_api_latte_post(app):
     """Test POST /api/latte endpoint duplicate payload"""
     with app.test_client() as client:
@@ -114,7 +114,21 @@ def test_200_api_latte_patch(app):
     assert json_data["success"] is True
 
 
-@patch("src.views.lattes.Latte", DummyLatte(**dummy_payload, ex=NoResultFound()))
+@patch(
+    "src.views.lattes.Latte", MagicMock(**{"query.filter.side_effect": NoResultFound})
+)
+def test_404_api_latte_id(app):
+    """Test GET /api/latte/1 endpoint not found latte"""
+    with app.test_client() as client:
+        res = client.get("/api/latte/2", headers={"Authorization": f"Bearer {token}"},)
+    json_data = res.get_json()
+    assert json_data["error"] == 404
+    assert json_data["success"] is False
+
+
+@patch(
+    "src.views.lattes.Latte", MagicMock(**{"query.filter.side_effect": NoResultFound})
+)
 def test_404_api_latte_patch(app):
     """Test PATCH /api/latte/1 endpoint not found latte"""
     with app.test_client() as client:
@@ -154,7 +168,9 @@ def test_200_api_latte_delete(app):
     assert json_data["success"] is True
 
 
-@patch("src.views.lattes.Latte", DummyLatte(**dummy_payload, ex=NoResultFound()))
+@patch(
+    "src.views.lattes.Latte", MagicMock(**{"query.filter.side_effect": NoResultFound})
+)
 def test_404_api_latte_delete(app):
     """Test DELETE /api/latte/1 endpoint not found"""
     with app.test_client() as client:
@@ -205,7 +221,12 @@ def test_500_api_latte(app):
 
 @patch(
     "src.views.lattes.Latte",
-    DummyLatte(**dummy_payload, ex=OperationalError("err", "err", "err")),
+    MagicMock(
+        **{
+            "query.all.side_effect": OperationalError("err", "err", "err"),
+            "query.filter.side_effect": OperationalError("err", "err", "err"),
+        }
+    ),
 )
 def test_502_api_latte_get_delete_patch(app):
     """Test 502 for gets, patch, and delete methods endpoint"""
@@ -223,7 +244,9 @@ def test_502_api_latte_get_delete_patch(app):
 
     with app.test_client() as client:
         res = client.patch(
-            "/api/latte/1", headers={"Authorization": f"Bearer {token}"},
+            "/api/latte/1",
+            headers={"Authorization": f"Bearer {token}"},
+            json=valid_payload,
         )
     json_data = res.get_json()
     assert json_data["error"] == 502
@@ -238,7 +261,10 @@ def test_502_api_latte_get_delete_patch(app):
     assert json_data["success"] is False
 
 
-@patch("src.views.lattes.Latte", OperationalErrLatte)
+@patch(
+    "src.views.lattes.Latte",
+    MagicMock(side_effect=OperationalError("err", "err", "err")),
+)
 def test_502_api_latte_post(app):
     """Test 502 for post method endpoint"""
     with app.test_client() as client:
