@@ -3,6 +3,6 @@ python:
     - "3.7"
 
 install:
-    - pip install requirements-dev.txt
+    - pip install -r requirements-dev.txt
 script:
     - pytest
