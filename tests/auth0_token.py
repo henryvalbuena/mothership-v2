@@ -15,7 +15,6 @@ def test_token() -> Dict[str, Any]:
     }
     headers = {
         "Content-Type": "application/json",
-        "Cookie": "did=s%3Av0%3Af45d8260-7bfe-11ea-ade0-2f540a308b4b.nOCHdcqYzCWhtGlimh2qB3eKgv3mBKdywHQunA6bd7M; did_compat=s%3Av0%3Af45d8260-7bfe-11ea-ade0-2f540a308b4b.nOCHdcqYzCWhtGlimh2qB3eKgv3mBKdywHQunA6bd7M",
     }
     conn.request("POST", "/oauth/token", json.dumps(payload), headers)
     res = conn.getresponse()
