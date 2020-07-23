@@ -24,7 +24,7 @@ Once you have your virtual environment setup and running, install dependencies b
 pip install -r requirements-dev.txt
 ```
 
-This will install all of the required packages we selected within the `requirements-prod.txt` and `requirements-dev.txt` files.
+This will install all of the required packages we selected within the `requirements.txt` and `requirements-dev.txt` files.
 
 ##### Key Dependencies
 
@@ -33,6 +33,47 @@ This will install all of the required packages we selected within the `requireme
 - [SQLAlchemy](https://www.sqlalchemy.org/) and [Flask-SQLAlchemy](https://flask-sqlalchemy.palletsprojects.com/en/2.x/) are libraries to handle the lightweight sqlite database. Since we want you to focus on auth, we handle the heavy lift for you in `./src/database/models.py`. We recommend skimming this code first so you know how to interface with the Drink model.
 
 - [jose](https://python-jose.readthedocs.io/en/latest/) JavaScript Object Signing and Encryption for JWTs. Useful for encoding, decoding, and verifying JWTS.
+
+## Running tests
+
+We are going to be using the `manage.py` module, which is going to set up our app and database.
+
+To install additional dev dependencies if you haven't:
+
+```bash
+pip install -r requirements-dev.txt
+```
+
+To run tests
+
+```bash
+pytest
+```
+Output
+
+```bash
+========================= test session starts ==========================
+platform darwin -- Python 3.7.7, pytest-5.4.3, py-1.9.0, pluggy-0.13.1
+rootdir: ../mothership-v2, inifile: pytest.ini
+plugins: cov-2.10.0
+collected 39 items
+
+tests/test_api_latte.py ....................        [ 51%]
+tests/test_auth.py ...................              [100%]
+
+---------- coverage: platform darwin, python 3.7.7-final-0 ------
+Name                     Stmts   Miss  Cover   Missing
+------------------------------------------------------
+src/api.py                  28      0   100%
+src/auth/auth.py            64      0   100%
+src/config.py                9      0   100%
+src/database/models.py      23      7    70%
+src/helpers/errors.py        4      0   100%
+src/helpers/tools.py         6      0   100%
+src/views/lattes.py         94      0   100%
+------------------------------------------------------
+TOTAL                      228      7    97%
+```
 
 ## Running the server
 
