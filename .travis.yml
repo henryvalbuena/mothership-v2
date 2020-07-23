@@ -6,3 +6,8 @@ install:
     - pip install -r requirements-dev.txt
 script:
     - pytest
+deploy:
+    provider: heroku
+    api_key: "$HEROKU_API_KEY"
+    run:
+        - "./manage.py flask db upgrade"
