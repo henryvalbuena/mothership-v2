@@ -1,15 +1,13 @@
 language: python
 python:
-    - "3.7"
-
+- '3.7'
 install:
-    - pip install -r requirements-dev.txt
-before_script:
-    - echo $HEROKU_API_KEY
+- pip install -r requirements-dev.txt
 script:
-    - pytest
+- pytest
 deploy:
-    provider: heroku
-    api_key: "$HEROKU_API_KEY"
-    run:
-        - "./manage.py flask db upgrade"
+  provider: heroku
+  api_key:
+    secure: LPqWcG/pm/EoPezICYxBgNopincyjuHZ94FqScebPzW8egoMujqfkJEosBRWzGPtSxM1DdPaLXbUUMUszxA6/UlmvEoN80gRPJEj9TpA8C5OU8CcqmpFIhNKe4FmWTWlJQTUqn22wx78THjdqo0VLGZUAARxVvGBvymh1XvRLhCNKD01e+jqFaGUCdd2sxTFpZH4wzNlqauP61xF0JTKQ7USknRd+ZLaUgdinZVETcV/n+1cHAqdPo7PBbO48TomFBJ+fgEHRV9XSWedo9ILWutReirgsxR4LtZATxXX6TRQYweyQXzuVuuOg+1cVyGJJEA+zblaK3RsEl5Fosptt2pT9TBcXUMYotnwVhw5DC4dD6CEz3/Wq9NgLJNFg8Ns5fpwrpV/ubuglHOERb034XigOrv8RGiFB6igHeHpxqtisvO8w+rV1vgeT8JqTuOWxjR/i4WLAH/4Jh1Cy1bPmafIxxQw4fwXOrabzQnuIGYpv6sax8922CLvH31pfYvEPkigSm0+Z5vRV7ZG1fORMPJESFvWf/hE/ij5f4GJTr/COWS+zjVe/PbZ8pxRscEmthlyGqncPtwOm/tBpYFBI2SQHh5uA8M8c1oFfl1SjZc7tkuR8Ta1bWUBg634bAOMqBaKOJcRZ2IxtzrLHlBuryNJNtlt8E3WhyIwga2hiU8=
+  run:
+  - "./manage.py flask db upgrade"
