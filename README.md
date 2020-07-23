@@ -1,4 +1,4 @@
-# Mothership V2
+# Mothership V2 [![Build Status](https://travis-ci.org/henryvalbuena/mothership-v2.svg?branch=master)](https://travis-ci.org/henryvalbuena/mothership-v2)
 Backend app to manage multiple APIs for front-end apps
 
 ## Apps Supported

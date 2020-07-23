@@ -5,6 +5,7 @@ from typing import Any, Dict
 
 
 def test_token() -> Dict[str, Any]:
+    """Get test token for automated tests"""
     conn = http.client.HTTPSConnection("coffe-shop-project.auth0.com")
     payload = {
         "client_id": "198maiZsYJEtoKZyrZ2bYw99uyUmCkfk",
