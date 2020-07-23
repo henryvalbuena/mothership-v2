@@ -9,7 +9,10 @@ from src.auth.auth import (
     check_permissions,
     verify_decode_jwt,
 )
-from tests.conftest import get_access, token, jwks, mocked_request as request
+from tests.auth0_token import test_token
+from tests.conftest import exp_token, get_access, jwks, mocked_request as request
+
+test_token = test_token()["access_token"]
 
 
 @patch("src.auth.auth.request", request(headers={"Authorization": "Bearer abcd123"}))
@@ -79,7 +82,7 @@ def test_check_permissions_no_access():
 @patch("src.auth.auth.json", MagicMock(method="loads", **jwks))
 def test_verify_decode_jwt():
     """Test decode jwt"""
-    res = verify_decode_jwt(token)
+    res = verify_decode_jwt(test_token)
     assert "iss" in res
     assert "sub" in res
     assert "aud" in res
@@ -120,9 +123,7 @@ def test_verify_decode_jwt_malformed_authorization():
 def test_verify_decode_jwt_expired():
     """Test decode jwt when the token has expired"""
     with pytest.raises(AuthError) as err:
-        verify_decode_jwt(
-            "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik5WWkxWaTNQVmhiaDllN2Zyenk4UCJ9.eyJpc3MiOiJodHRwczovL2NvZmZlLXNob3AtcHJvamVjdC5hdXRoMC5jb20vIiwic3ViIjoiMTk4bWFpWnNZSkV0b0taeXJaMmJZdzk5dXlVbUNrZmtAY2xpZW50cyIsImF1ZCI6ImRyaW5rcyIsImlhdCI6MTU5NTE5NjQzMywiZXhwIjoxNTk1MjgyODMzLCJhenAiOiIxOThtYWlac1lKRXRvS1p5cloyYll3OTl1eVVtQ2tmayIsInNjb3BlIjoiZ2V0OmxhdHRlIHBvc3Q6bGF0dGUgcGF0Y2g6bGF0dGUgZGVsZXRlOmxhdHRlIiwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIiwicGVybWlzc2lvbnMiOlsiZ2V0OmxhdHRlIiwicG9zdDpsYXR0ZSIsInBhdGNoOmxhdHRlIiwiZGVsZXRlOmxhdHRlIl19.vRioiEITUMr8vWMQ6TwF3Hw8jU7NV26InJvHOMjmukFYQVERFtbsSmQVGslgYOLkBd4KlZRDaTcmUr8FD017G9e-a5Utp-_0RBGCTuKHXTDzamWMelEXwTiD5LyxPXmB2Ej59q3vMpzWrj975o-OWGuhWN9x4FR6GmF0Emzkx7xqq4c371ninxMXM4Ie8gbnVHxWGdNYyt0dPCc85LHkuCiIbMdaqh8vT7wLbPvlWNStBKw1SkI9r-a1b6HGjQ0e_PRFvgnHpWWCAH0OUd5MWdiM-NmwnO_sFx1uWpAyICk5zCQRzbbo--i0kLA-uuT8berkVX7Pmvpv9_wpUUZmOg"
-        )
+        verify_decode_jwt(exp_token)
 
     assert err.value.code == 401
     assert err.value.description == "Token expired."
@@ -134,7 +135,7 @@ def test_verify_decode_jwt_expired():
 def test_verify_decode_jwt_bad_claims():
     """Test decode jwt when the token has an incorrect audience"""
     with pytest.raises(AuthError) as err:
-        verify_decode_jwt(token)
+        verify_decode_jwt(test_token)
 
     assert err.value.code == 401
     assert (
@@ -149,7 +150,7 @@ def test_verify_decode_jwt_bad_claims():
 def test_verify_decode_jwt_error_parsing():
     """Test decode jwt when the token cannot be parsed"""
     with pytest.raises(AuthError) as err:
-        verify_decode_jwt(token)
+        verify_decode_jwt(test_token)
 
     assert err.value.code == 400
     assert err.value.description == "Unable to parse authentication token."
@@ -160,13 +161,15 @@ def test_verify_decode_jwt_error_parsing():
 def test_verify_decode_jwt_bad_jwks():
     """Test decode jwt when the token is bad"""
     with pytest.raises(AuthError) as err:
-        verify_decode_jwt(token)
+        verify_decode_jwt(test_token)
 
     assert err.value.code == 400
     assert err.value.description == "Unable to find the appropriate key."
 
 
-@patch("src.auth.auth.request", request(headers={"Authorization": f"Bearer {token}"}))
+@patch(
+    "src.auth.auth.request", request(headers={"Authorization": f"Bearer {test_token}"})
+)
 @patch("src.auth.auth.urlopen", MagicMock())
 @patch("src.auth.auth.json", MagicMock(method="loads", **jwks))
 def test_auth_decorator():
@@ -208,7 +211,9 @@ def test_auth_decorator():
     assert "patch:latte" in res["permissions"]
 
 
-@patch("src.auth.auth.request", request(headers={"Authorization": f"Bearer {token}"}))
+@patch(
+    "src.auth.auth.request", request(headers={"Authorization": f"Bearer {test_token}"})
+)
 @patch("src.auth.auth.urlopen", MagicMock())
 @patch("src.auth.auth.json", MagicMock(method="loads", **jwks))
 def test_auth_decorator_wrong_permission():
@@ -220,7 +225,9 @@ def test_auth_decorator_wrong_permission():
     assert err.value.description == "User don't have access to resource."
 
 
-@patch("src.auth.auth.request", request(headers={"Authorization": f"Bearer {token}"}))
+@patch(
+    "src.auth.auth.request", request(headers={"Authorization": f"Bearer {test_token}"})
+)
 @patch("src.auth.auth.urlopen", MagicMock())
 @patch("src.auth.auth.json", MagicMock(method="loads", **jwks))
 def test_auth_decorator_no_permissions():
@@ -244,7 +251,9 @@ def test_auth_decorator_no_header():
     assert err.value.description == "Missing mandatory headers."
 
 
-@patch("src.auth.auth.request", request(headers={"Authorization": f"Bearer {token}"}))
+@patch(
+    "src.auth.auth.request", request(headers={"Authorization": f"Bearer {test_token}"})
+)
 @patch("src.auth.auth.urlopen", MagicMock())
 @patch("src.auth.auth.json", MagicMock(method="loads", **jwks))
 def test_auth_decorator_permission_put():
