@@ -4,6 +4,8 @@ python:
 
 install:
     - pip install -r requirements-dev.txt
+before_script:
+    - echo "$HEROKU_API_KEY"
 script:
     - pytest
 deploy:
