@@ -32,8 +32,8 @@ def create_app(config_name: str) -> Flask:
     @app.errorhandler(405)
     def _handle_api_error(err):
         "Necessary when using blueprints"
-        app.logger.warning(str(err))
-        return jsonify({"error": err.code, "message": err.description}), err.code
+        app.logger.error(str(err))
+        return jsonify({"error": err.code, "message": err.description, "success": False}), err.code
 
     return app
 
@@ -44,17 +44,9 @@ def create_app(config_name: str) -> Flask:
 @profile.errorhandler(422)
 @profile.errorhandler(500)
 @profile.errorhandler(502)
+@profile.errorhandler(AuthError)
 def _json_error_handler(error):
     "API error handler"
-    return (
-        jsonify({"success": False, "error": error.code, "message": error.description}),
-        error.code,
-    )
-
-
-@profile.errorhandler(AuthError)
-def _auth_error_handler(error):
-    """Authentication error custom handler AuthError"""
     return (
         jsonify({"success": False, "error": error.code, "message": error.description}),
         error.code,
