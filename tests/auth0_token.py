@@ -19,4 +19,4 @@ def test_token() -> Dict[str, Any]:
     conn.request("POST", "/oauth/token", json.dumps(payload), headers)
     res = conn.getresponse()
     data = res.read()
-    return json.loads(data.decode("utf-8"))
+    return json.loads(data.decode("utf-8"))["access_token"]
