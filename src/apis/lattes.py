@@ -1,3 +1,4 @@
+"""This is where the Lattes api endpoints/routes are located"""
 import json
 
 from flask import Blueprint, jsonify, abort, request, current_app as context
