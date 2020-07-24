@@ -8,6 +8,7 @@ from unittest.mock import patch, MagicMock
 import pytest
 
 from src.api import create_app
+from src.database.models import db
 from src.auth.auth import requires_auth
 
 AUTH0_DOMAIN = "coffe-shop-project.auth0.com"
@@ -64,7 +65,19 @@ valid_payload = {
 wrong_payload = {"bad": "payload"}
 invalid_payload = {"title": "not-so-good$", "ingredients": "not-so-good$-neither"}
 
-exp_token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik5WWkxWaTNQVmhiaDllN2Zyenk4UCJ9.eyJpc3MiOiJodHRwczovL2NvZmZlLXNob3AtcHJvamVjdC5hdXRoMC5jb20vIiwic3ViIjoiMTk4bWFpWnNZSkV0b0taeXJaMmJZdzk5dXlVbUNrZmtAY2xpZW50cyIsImF1ZCI6ImRyaW5rcyIsImlhdCI6MTU5NTM4MDg5NCwiZXhwIjoxNTk1NDY3Mjk0LCJhenAiOiIxOThtYWlac1lKRXRvS1p5cloyYll3OTl1eVVtQ2tmayIsInNjb3BlIjoiZ2V0OmxhdHRlIHBvc3Q6bGF0dGUgcGF0Y2g6bGF0dGUgZGVsZXRlOmxhdHRlIiwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIiwicGVybWlzc2lvbnMiOlsiZ2V0OmxhdHRlIiwicG9zdDpsYXR0ZSIsInBhdGNoOmxhdHRlIiwiZGVsZXRlOmxhdHRlIl19.VbUE01rVIsovJdCInEhttq_xZofpHIQMZ2XzGky2xGj_SOZneIwbAqOIUyTm_R59cdzD1UhzVoPNBCY7gpzmVj4E3H_mBuUR0sj5JAA92oil2l-XX-8f2BM-pCFgF_KOfivjx6zTydDCt56y8DmBef0bvL2I2AlXEnJLRYsKJZkPGR1h5k9MNL2f_7QLahjcU0R6B50bpz4oT8S2tXcaUaqQ88l6fCFDt817sj97oSC8Vm3Cg5p4M8z4BHqw6gfthm6H29U4AXiwAIvl8qWpNfsk0ugG9vBFs3i23coNjKWdIQYYRAxHRqNSBgX4DpkR4QVXVv2KyJESIBkzhqSmvg"
+exp_token = (
+    "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik5WWkxWaTNQVmhiaDllN2Zyenk4UCJ9."
+    "eyJpc3MiOiJodHRwczovL2NvZmZlLXNob3AtcHJvamVjdC5hdXRoMC5jb20vIiwic3ViIjoiMTk4bWF"
+    "pWnNZSkV0b0taeXJaMmJZdzk5dXlVbUNrZmtAY2xpZW50cyIsImF1ZCI6ImRyaW5rcyIsImlhdCI6MT"
+    "U5NTM4MDg5NCwiZXhwIjoxNTk1NDY3Mjk0LCJhenAiOiIxOThtYWlac1lKRXRvS1p5cloyYll3OTl1e"
+    "VVtQ2tmayIsInNjb3BlIjoiZ2V0OmxhdHRlIHBvc3Q6bGF0dGUgcGF0Y2g6bGF0dGUgZGVsZXRlOmxhd"
+    "HRlIiwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIiwicGVybWlzc2lvbnMiOlsiZ2V0OmxhdHRlIiwic"
+    "G9zdDpsYXR0ZSIsInBhdGNoOmxhdHRlIiwiZGVsZXRlOmxhdHRlIl19.VbUE01rVIsovJdCInEhttq_x"
+    "ZofpHIQMZ2XzGky2xGj_SOZneIwbAqOIUyTm_R59cdzD1UhzVoPNBCY7gpzmVj4E3H_mBuUR0sj5JAA9"
+    "2oil2l-XX-8f2BM-pCFgF_KOfivjx6zTydDCt56y8DmBef0bvL2I2AlXEnJLRYsKJZkPGR1h5k9MNL2f"
+    "_7QLahjcU0R6B50bpz4oT8S2tXcaUaqQ88l6fCFDt817sj97oSC8Vm3Cg5p4M8z4BHqw6gfthm6H29U4"
+    "AXiwAIvl8qWpNfsk0ugG9vBFs3i23coNjKWdIQYYRAxHRqNSBgX4DpkR4QVXVv2KyJESIBkzhqSmvg"
+)
 
 
 jsonurl = urlopen(f"https://{AUTH0_DOMAIN}/.well-known/jwks.json")
@@ -85,3 +98,13 @@ def get_access(permission):
 def app():
     os.environ["DATABASE_URL"] = "sqlite:///test.db"
     return create_app("testing")
+
+
+@pytest.fixture(scope="module")
+def db_testing():
+    os.environ["DATABASE_URL"] = "sqlite:///test.db"
+    app = create_app("testing")
+    with app.app_context():
+        db.create_all()
+        yield app
+        db.drop_all()

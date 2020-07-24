@@ -54,7 +54,7 @@ def check_permissions(permission, payload):
     return True
 
 
-def verify_decode_jwt(token):
+def verify_decode_jwt(token):  # noqa: C901
     """Checks if the jwt has been tampered with"""
     # Get auth0 public key
     jsonurl = urlopen(f"https://{AUTH0_DOMAIN}/.well-known/jwks.json")

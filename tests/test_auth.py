@@ -12,7 +12,7 @@ from src.auth.auth import (
 from tests.auth0_token import test_token
 from tests.conftest import exp_token, get_access, jwks, mocked_request as request
 
-test_token = test_token()["access_token"]
+test_token = test_token()
 
 
 @patch("src.auth.auth.request", request(headers={"Authorization": "Bearer abcd123"}))
@@ -111,7 +111,10 @@ def test_verify_decode_jwt_malformed_authorization():
     """Test decode jwt when the token authorization is malformed"""
     with pytest.raises(AuthError) as err:
         verify_decode_jwt(
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJwZXJtaXNzaW9ucyI6WyJnZXQ6bGF0dGUiLCJwb3N0OmxhdHRlIiwicGF0Y2g6bGF0dGUiLCJkZWxldGU6bGF0dGUiXX0.uPZwwhHdd6FtMFNU-xmkSzWNiE9-S0szTQkT7a6m0ss"
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3OD"
+            "kwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJwZXJtaX"
+            "NzaW9ucyI6WyJnZXQ6bGF0dGUiLCJwb3N0OmxhdHRlIiwicGF0Y2g6bGF0dG"
+            "UiLCJkZWxldGU6bGF0dGUiXX0.uPZwwhHdd6FtMFNU-xmkSzWNiE9-S0szTQkT7a6m0ss"
         )
 
     assert err.value.code == 401
