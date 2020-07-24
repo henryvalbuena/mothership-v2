@@ -1,4 +1,4 @@
-# Mothership V2 [![Build Status](https://travis-ci.org/henryvalbuena/mothership-v2.svg?branch=master)](https://travis-ci.org/henryvalbuena/mothership-v2)[![Coverage Status](https://coveralls.io/repos/github/henryvalbuena/mothership-v2/badge.svg?branch=master)](https://coveralls.io/github/henryvalbuena/mothership-v2?branch=master)
+# Mothership V2 [![Build Status](https://travis-ci.org/henryvalbuena/mothership-v2.svg?branch=master)](https://travis-ci.org/henryvalbuena/mothership-v2) [![Coverage Status](https://coveralls.io/repos/github/henryvalbuena/mothership-v2/badge.svg?branch=master)](https://coveralls.io/github/henryvalbuena/mothership-v2?branch=master)
 Backend app to manage multiple APIs for front-end apps
 
 ## Apps Supported
@@ -49,30 +49,11 @@ To run tests
 ```bash
 pytest
 ```
-Output
+
+Linting
 
 ```bash
-========================= test session starts ==========================
-platform darwin -- Python 3.7.7, pytest-5.4.3, py-1.9.0, pluggy-0.13.1
-rootdir: ../mothership-v2, inifile: pytest.ini
-plugins: cov-2.10.0
-collected 39 items
-
-tests/test_api_latte.py ....................        [ 51%]
-tests/test_auth.py ...................              [100%]
-
----------- coverage: platform darwin, python 3.7.7-final-0 ------
-Name                     Stmts   Miss  Cover   Missing
-------------------------------------------------------
-src/api.py                  28      0   100%
-src/auth/auth.py            64      0   100%
-src/config.py                9      0   100%
-src/database/models.py      23      7    70%
-src/helpers/errors.py        4      0   100%
-src/helpers/tools.py         6      0   100%
-src/views/lattes.py         94      0   100%
-------------------------------------------------------
-TOTAL                      228      7    97%
+flake8
 ```
 
 ## Running the server

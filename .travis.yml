@@ -6,6 +6,7 @@ install:
 - pip install coveralls
 script:
 - pytest
+- flake8
 deploy:
   provider: heroku
   api_key:

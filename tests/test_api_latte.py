@@ -14,7 +14,7 @@ from tests.conftest import (
     valid_payload,
 )
 
-test_token = test_token()["access_token"]
+test_token = test_token()
 
 
 def test_server_running(app):
