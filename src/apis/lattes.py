@@ -10,10 +10,10 @@ from src.helpers.tools import validate_none_word_input
 from src.helpers.errors import InvalidUserInput
 
 
-profile = Blueprint("profile", __name__)
+lattes_bp = Blueprint("lattes_bp", __name__)
 
 
-@profile.route("/api/latte")
+@lattes_bp.route("/api/latte")
 def get_lattes():
     """Return lattes from database"""
     try:
@@ -27,7 +27,7 @@ def get_lattes():
         abort(500)
 
 
-@profile.route("/api/latte/<int:latte_id>")
+@lattes_bp.route("/api/latte/<int:latte_id>")
 def get_latte(latte_id):
     """Return a latte from database"""
     try:
@@ -44,7 +44,7 @@ def get_latte(latte_id):
         abort(500)
 
 
-@profile.route("/api/latte", methods=["POST"])
+@lattes_bp.route("/api/latte", methods=["POST"])
 @requires_auth(permission="post:latte")
 def create_lattes(jwt):
     """Create new latte"""
@@ -70,7 +70,7 @@ def create_lattes(jwt):
         abort(500)
 
 
-@profile.route("/api/latte/<int:latte_id>", methods=["PATCH"])
+@lattes_bp.route("/api/latte/<int:latte_id>", methods=["PATCH"])
 @requires_auth(permission="patch:latte")
 def update_drink(jwt, latte_id):
     """Update latte information"""
@@ -102,7 +102,7 @@ def update_drink(jwt, latte_id):
         abort(500)
 
 
-@profile.route("/api/latte/<int:latte_id>", methods=["DELETE"])
+@lattes_bp.route("/api/latte/<int:latte_id>", methods=["DELETE"])
 @requires_auth(permission="delete:latte")
 def remove_drink(jwt, latte_id):
     """Remove latte based on its id"""
