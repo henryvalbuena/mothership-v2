@@ -25,7 +25,7 @@ def test_server_running(app):
     assert "running" in json_data["status"]
 
 
-@patch("src.views.lattes.Latte", dummy_latte_instance)
+@patch("src.apis.lattes.Latte", dummy_latte_instance)
 def test_api_latte_get(app):
     """Test GET /api/latte endpoint"""
     with app.test_client() as client:
@@ -37,7 +37,7 @@ def test_api_latte_get(app):
     assert "testing" in json_data["lattes"][0]["ingredients"]
 
 
-@patch("src.views.lattes.Latte", dummy_latte_instance)
+@patch("src.apis.lattes.Latte", dummy_latte_instance)
 def test_api_latte_get_id(app):
     """Test GET /api/latte/id endpoint"""
     with app.test_client() as client:
@@ -58,7 +58,7 @@ def test_401_api_latte_post(app):
     assert "Missing mandatory headers" in json_data["message"]
 
 
-@patch("src.views.lattes.Latte", DummyLatte)
+@patch("src.apis.lattes.Latte", DummyLatte)
 def test_201_api_latte_post(app):
     """Test POST /api/latte endpoint with auth token"""
     with app.test_client() as client:
@@ -72,7 +72,7 @@ def test_201_api_latte_post(app):
     assert json_data["success"] is True
 
 
-@patch("src.views.lattes.Latte", DummyLatte)
+@patch("src.apis.lattes.Latte", DummyLatte)
 def test_400_api_latte_post(app):
     """Test POST /api/latte endpoint with auth token bad payload"""
     with app.test_client() as client:
@@ -87,7 +87,7 @@ def test_400_api_latte_post(app):
 
 
 @patch(
-    "src.views.lattes.Latte", MagicMock(side_effect=IntegrityError("err", "err", "err"))
+    "src.apis.lattes.Latte", MagicMock(side_effect=IntegrityError("err", "err", "err"))
 )
 def test_409_api_latte_post(app):
     """Test POST /api/latte endpoint duplicate payload"""
@@ -102,7 +102,7 @@ def test_409_api_latte_post(app):
     assert json_data["success"] is False
 
 
-@patch("src.views.lattes.Latte", dummy_latte_instance)
+@patch("src.apis.lattes.Latte", dummy_latte_instance)
 def test_200_api_latte_patch(app):
     """Test PATCH /api/latte/1 endpoint"""
     with app.test_client() as client:
@@ -117,7 +117,7 @@ def test_200_api_latte_patch(app):
 
 
 @patch(
-    "src.views.lattes.Latte", MagicMock(**{"query.filter.side_effect": NoResultFound})
+    "src.apis.lattes.Latte", MagicMock(**{"query.filter.side_effect": NoResultFound})
 )
 def test_404_api_latte_id(app):
     """Test GET /api/latte/1 endpoint not found latte"""
@@ -131,7 +131,7 @@ def test_404_api_latte_id(app):
 
 
 @patch(
-    "src.views.lattes.Latte", MagicMock(**{"query.filter.side_effect": NoResultFound})
+    "src.apis.lattes.Latte", MagicMock(**{"query.filter.side_effect": NoResultFound})
 )
 def test_404_api_latte_patch(app):
     """Test PATCH /api/latte/1 endpoint not found latte"""
@@ -146,7 +146,7 @@ def test_404_api_latte_patch(app):
     assert json_data["success"] is False
 
 
-@patch("src.views.lattes.Latte", DummyLatte(**dummy_payload))
+@patch("src.apis.lattes.Latte", DummyLatte(**dummy_payload))
 def test_400_api_latte_patch(app):
     """Test PATCH /api/latte endpoint with auth token bad payload"""
     with app.test_client() as client:
@@ -160,7 +160,7 @@ def test_400_api_latte_patch(app):
     assert json_data["success"] is False
 
 
-@patch("src.views.lattes.Latte", dummy_latte_instance)
+@patch("src.apis.lattes.Latte", dummy_latte_instance)
 def test_200_api_latte_delete(app):
     """Test DELETE /api/latte/1 endpoint"""
     with app.test_client() as client:
@@ -173,7 +173,7 @@ def test_200_api_latte_delete(app):
 
 
 @patch(
-    "src.views.lattes.Latte", MagicMock(**{"query.filter.side_effect": NoResultFound})
+    "src.apis.lattes.Latte", MagicMock(**{"query.filter.side_effect": NoResultFound})
 )
 def test_404_api_latte_delete(app):
     """Test DELETE /api/latte/1 endpoint not found"""
@@ -226,7 +226,7 @@ def test_500_api_latte(app):
 
 
 @patch(
-    "src.views.lattes.Latte",
+    "src.apis.lattes.Latte",
     MagicMock(
         **{
             "query.all.side_effect": OperationalError("err", "err", "err"),
@@ -268,7 +268,7 @@ def test_502_api_latte_get_delete_patch(app):
 
 
 @patch(
-    "src.views.lattes.Latte",
+    "src.apis.lattes.Latte",
     MagicMock(side_effect=OperationalError("err", "err", "err")),
 )
 def test_502_api_latte_post(app):
