@@ -45,7 +45,7 @@ pip install -r requirements-dev.txt
 ```
 
 To run tests
-
+> ⚠️ **WARNING** to be able to succesfully run `pytest` you'll have to provide an environment variable containing the Auth0 client secret. Please check [here](https://github.com/henryvalbuena/mothership-v2/blob/master/api_docs/latte_machine/README.md) for more info.
 ```bash
 pytest
 ```
