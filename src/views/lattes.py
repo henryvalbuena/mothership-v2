@@ -4,7 +4,7 @@ from flask import Blueprint, jsonify, abort, request, current_app as context
 from sqlalchemy.exc import DataError, IntegrityError, OperationalError
 from sqlalchemy.orm.exc import NoResultFound
 
-from src.database.models import Latte
+from src.database.latte import Latte
 from src.auth.auth import requires_auth
 from src.helpers.tools import validate_none_word_input
 from src.helpers.errors import InvalidUserInput

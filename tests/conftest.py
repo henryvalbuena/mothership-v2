@@ -8,7 +8,7 @@ from unittest.mock import patch, MagicMock
 import pytest
 
 from src.api import create_app
-from src.database.models import db
+from src.database.persistence import db
 from src.auth.auth import requires_auth
 
 AUTH0_DOMAIN = "coffe-shop-project.auth0.com"

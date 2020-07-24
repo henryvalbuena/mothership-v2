@@ -1,7 +1,7 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
 
-from src.database.models import db, migrate
+from src.database.persistence import db, migrate
 from src.views.lattes import profile
 from src.auth.auth import AuthError
 

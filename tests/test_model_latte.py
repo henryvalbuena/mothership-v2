@@ -1,7 +1,7 @@
 """Tests for Latte persistance model"""
 from sqlalchemy.orm.exc import NoResultFound
 
-from src.database.models import Latte
+from src.database.latte import Latte
 
 import pytest
 

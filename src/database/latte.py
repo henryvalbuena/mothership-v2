@@ -1,20 +1,16 @@
-# import os
-from sqlalchemy import Column, String, Integer
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 import json
 
-db = SQLAlchemy()
-migrate = Migrate()
+from sqlalchemy import Column, String, Integer
 
-
-"""
-Latte
-a persistent Latte entity, extends the base SQLAlchemy Model
-"""
+from src.database.persistence import db
 
 
 class Latte(db.Model):
+    """
+    Latte
+    a persistent Latte entity, extends the base SQLAlchemy Model
+    """
+
     __tablename__ = "latte"
     # Autoincrementing, unique primary key
     id = Column(Integer, primary_key=True)
