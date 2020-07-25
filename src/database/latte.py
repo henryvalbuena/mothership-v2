@@ -1,3 +1,4 @@
+"""This is where the Latte schema is defined"""
 import json
 
 from sqlalchemy import Column, String, Integer

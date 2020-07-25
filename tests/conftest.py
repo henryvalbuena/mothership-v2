@@ -53,10 +53,76 @@ class DummyLatte:
         pass
 
 
+class DummyProject:
+    def __init__(self, title, meta, description, image, git_repo, demo_link, id=1):
+        self.id = id
+        self.title = title
+        self.meta = meta
+        self.description = description
+        self.image = image
+        self.git_repo = git_repo
+        self.demo_link = demo_link
+
+    @property
+    def query(self):
+        return self
+
+    def filter(self, expression):
+        return self
+
+    def one(self):
+        return self
+
+    def all(self):
+        return [self]
+
+    @property
+    def to_json(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "meta": self.meta,
+            "description": self.description,
+            "image": self.image,
+            "git_repo": self.git_repo,
+            "demo_link": self.demo_link,
+        }
+
+    def insert(self):
+        pass
+
+    def update(self, title, meta, description, image, git_repo, demo_link):
+        self.title = title
+        self.meta = meta
+        self.description = description
+        self.image = image
+        self.git_repo = git_repo
+        self.demo_link = demo_link
+
+    def delete(self):
+        pass
+
+
 mocked_request = namedtuple("request", "headers")
 dummy_latte_instance = DummyLatte(
     "test", "[{'color': 'black', 'name': 'testing', 'parts': 1}]"
 )
+dummy_project_instance = DummyProject(
+    "test",
+    '["meta", "testing"]',
+    "some testing",
+    "image.png",
+    "github.com",
+    "heroku.com",
+)
+project_payload_good = {
+    "title": "test",
+    "meta": ["meta", "testing"],
+    "description": "some testing",
+    "image": "image.png",
+    "git_repo": "github.com",
+    "demo_link": "heroku.com",
+}
 dummy_payload = {"title": "test", "ingredients": "test", "id": 1}
 valid_payload = {
     "title": "testpayload",
@@ -64,7 +130,6 @@ valid_payload = {
 }
 wrong_payload = {"bad": "payload"}
 invalid_payload = {"title": "not-so-good$", "ingredients": "not-so-good$-neither"}
-
 exp_token = (
     "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik5WWkxWaTNQVmhiaDllN2Zyenk4UCJ9."
     "eyJpc3MiOiJodHRwczovL2NvZmZlLXNob3AtcHJvamVjdC5hdXRoMC5jb20vIiwic3ViIjoiMTk4bWF"
@@ -78,7 +143,6 @@ exp_token = (
     "_7QLahjcU0R6B50bpz4oT8S2tXcaUaqQ88l6fCFDt817sj97oSC8Vm3Cg5p4M8z4BHqw6gfthm6H29U4"
     "AXiwAIvl8qWpNfsk0ugG9vBFs3i23coNjKWdIQYYRAxHRqNSBgX4DpkR4QVXVv2KyJESIBkzhqSmvg"
 )
-
 
 jsonurl = urlopen(f"https://{AUTH0_DOMAIN}/.well-known/jwks.json")
 jwks = {"loads.return_value": json.loads(jsonurl.read())}
