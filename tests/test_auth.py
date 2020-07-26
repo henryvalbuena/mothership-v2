@@ -10,7 +10,7 @@ from src.auth.auth import (
     verify_decode_jwt,
 )
 from tests.auth0_token import latte_token, project_token
-from tests.conftest import exp_token, get_access, jwks, mocked_request as request
+from tests.conftest import exp_latte_token, exp_project_token, get_access, jwks, mocked_request as request
 
 latte_token = latte_token()
 project_token = project_token()
@@ -152,7 +152,7 @@ def test_verify_decode_jwt_malformed_authorization():
 def test_verify_decode_jwt_expired():
     """Test decode jwt when the token has expired"""
     with pytest.raises(AuthError) as err:
-        verify_decode_jwt(exp_token, "latte")
+        verify_decode_jwt(exp_latte_token, "latte")
 
     assert err.value.code == 401
     assert err.value.description == "Token expired."

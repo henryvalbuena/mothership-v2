@@ -128,18 +128,31 @@ valid_payload = {
 }
 wrong_payload = {"bad": "payload"}
 invalid_payload = {"title": "not-so-good$", "ingredients": "not-so-good$-neither"}
-exp_token = (
-    "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik5WWkxWaTNQVmhiaDllN2Zyenk4UCJ9."
-    "eyJpc3MiOiJodHRwczovL2NvZmZlLXNob3AtcHJvamVjdC5hdXRoMC5jb20vIiwic3ViIjoiMTk4bWF"
-    "pWnNZSkV0b0taeXJaMmJZdzk5dXlVbUNrZmtAY2xpZW50cyIsImF1ZCI6ImRyaW5rcyIsImlhdCI6MT"
-    "U5NTM4MDg5NCwiZXhwIjoxNTk1NDY3Mjk0LCJhenAiOiIxOThtYWlac1lKRXRvS1p5cloyYll3OTl1e"
-    "VVtQ2tmayIsInNjb3BlIjoiZ2V0OmxhdHRlIHBvc3Q6bGF0dGUgcGF0Y2g6bGF0dGUgZGVsZXRlOmxhd"
-    "HRlIiwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIiwicGVybWlzc2lvbnMiOlsiZ2V0OmxhdHRlIiwic"
-    "G9zdDpsYXR0ZSIsInBhdGNoOmxhdHRlIiwiZGVsZXRlOmxhdHRlIl19.VbUE01rVIsovJdCInEhttq_x"
-    "ZofpHIQMZ2XzGky2xGj_SOZneIwbAqOIUyTm_R59cdzD1UhzVoPNBCY7gpzmVj4E3H_mBuUR0sj5JAA9"
-    "2oil2l-XX-8f2BM-pCFgF_KOfivjx6zTydDCt56y8DmBef0bvL2I2AlXEnJLRYsKJZkPGR1h5k9MNL2f"
-    "_7QLahjcU0R6B50bpz4oT8S2tXcaUaqQ88l6fCFDt817sj97oSC8Vm3Cg5p4M8z4BHqw6gfthm6H29U4"
-    "AXiwAIvl8qWpNfsk0ugG9vBFs3i23coNjKWdIQYYRAxHRqNSBgX4DpkR4QVXVv2KyJESIBkzhqSmvg"
+exp_latte_token = (
+    "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IktCaGRneWZrZVhwd1RjbnpfRUxRNSJ9."
+    "eyJpc3MiOiJodHRwczovL21vdGhlcnNoaXAtdjIudXMuYXV0aDAuY29tLyIsInN1YiI6IkxUYTV6V"
+    "EwwTEljNGlsQlZtc1lNdHhyVnVvWm85NlNRQGNsaWVudHMiLCJhdWQiOiJsYXR0ZSIsImlhdCI6MT"
+    "U5NTczMzQxNywiZXhwIjoxNTk1ODE5ODE3LCJhenAiOiJMVGE1elRMMExJYzRpbEJWbXNZTXR4clZ"
+    "1b1pvOTZTUSIsInNjb3BlIjoiZ2V0OmxhdHRlIHBvc3Q6bGF0dGUgcGF0Y2g6bGF0dGUgZGVsZXRl"
+    "OmxhdHRlIiwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIn0.pynwhfRghIZf_xkdmF76nu0BVFJkA"
+    "988XTXlxJ7bOAjAOR7jjPQ7WJ9ZmcqG_Fz0SRbcZ0u9PG8ZFRD6o7nVcoOdos8K_9_T-qDlhrvPizM"
+    "8Dw-8-hhvg3Pe9ksxw-qwnRbj1gf7wveohuLBKVjdA_KqAbIg89uGRcYu7hrueCJO7W8dJ5NWjfE1b"
+    "VeEPLYNZY7MgE6Xc5uZX-U0OOuza0Ee9JUjHbSkax-ZG3tv_rLL5YyWePswS_8MTwiq3aL6vy5Noow"
+    "aLOY40F7lPGl58T33Xp2XW5nFbG6tkXgQuN7E1-QlCg-xich6mS5jR95MLyfIPToxMQ6y1qcfvS-K5w"
+)
+exp_project_token = (
+    "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IktCaGRneWZrZVhwd1RjbnpfRUxRNSJ9."
+    "eyJpc3MiOiJodHRwczovL21vdGhlcnNoaXAtdjIudXMuYXV0aDAuY29tLyIsInN1YiI6IjZiMG9kN"
+    "1p2V2w3bUkxWHFrMXRpOVBvVmlWeTY1RlpUQGNsaWVudHMiLCJhdWQiOiJwcm9qZWN0IiwiaWF0Ij"
+    "oxNTk1NzM1NjA3LCJleHAiOjE1OTU4MjIwMDcsImF6cCI6IjZiMG9kN1p2V2w3bUkxWHFrMXRpOVB"
+    "vVmlWeTY1RlpUIiwic2NvcGUiOiJnZXQ6cHJvamVjdCBwb3N0OnByb2plY3QgcGF0Y2g6cHJvamVj"
+    "dCBkZWxldGU6cHJvamVjdCIsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyIsInBlcm1pc3Npb25zI"
+    "jpbImdldDpwcm9qZWN0IiwicG9zdDpwcm9qZWN0IiwicGF0Y2g6cHJvamVjdCIsImRlbGV0ZTpwcm"
+    "9qZWN0Il19.Lzf2d61NyuBxz2eoeI1xHLK5-T8u1h6Ep5RQdQCfRgSfuR5Weyy8OSdZrSYYva7l_t"
+    "A9eifKylzQZkQDXqnKiT_1pGqfX3zRKyMzzKaTxPh-I73GO7AQTT0JIMPAbQXuZW4adDuHzWrZJz-"
+    "uuvA-CmRkRVfLIJNV7YIvEelUPAFlCAvqqtjfHfr71YCdRosalR2gtg6TxMK0RtoJA7ahO14lAP3K"
+    "8ax00U75E4Js40DLtU93Iy8BuWjBOcCdYajRixGiLTJZDdEG4FBlAuEUwQvYeO89HA9WHLSbAtxzi"
+    "mG0NvbkVch9f26sWqQejLQHx5xh22V8j5DH0bQDbvsMnw"
 )
 
 jsonurl = urlopen(f"https://{AUTH0_DOMAIN}/.well-known/jwks.json")
