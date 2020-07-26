@@ -60,7 +60,7 @@ def create_project(jwt):
         project = Project(**payload)
         project.insert()
         return jsonify(project.to_json), 201
-    except KeyError as err:
+    except (KeyError, TypeError) as err:
         context.logger.error(err)
         abort(400)
     except IntegrityError as err:
@@ -88,9 +88,10 @@ def update_project(jwt, project_id):
             "git_repo": request.json["git_repo"],
             "demo_link": request.json["demo_link"],
         }
+        print(updated_project)
         project.update(**updated_project)
         return jsonify(project.to_json)
-    except KeyError as err:
+    except (KeyError, TypeError) as err:
         context.logger.error(err)
         abort(400)
     except NoResultFound as err:

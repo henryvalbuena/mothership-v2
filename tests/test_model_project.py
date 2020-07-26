@@ -1,4 +1,6 @@
 """Tests for Latte persistance model"""
+import json
+
 from sqlalchemy.orm.exc import NoResultFound
 
 from src.database.project import Project
@@ -70,6 +72,7 @@ def test_project_update(db_testing):
         updated_project = project_to_update.to_json
         updated_project["title"] = "updated test"
         del updated_project["id"]
+        updated_project["meta"] = json.dumps(updated_project["meta"])
         project_to_update.update(**updated_project)
     size = Project.query.all()
     project = Project.query.filter(Project.id == 1).one().to_json

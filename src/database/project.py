@@ -63,7 +63,7 @@ class Project(db.Model):
                 TODO
         """
         self.title = title
-        self.meta = json.dumps(meta)
+        self.meta = meta
         self.description = description
         self.image = image
         self.git_repo = git_repo

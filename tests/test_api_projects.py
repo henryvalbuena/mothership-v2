@@ -23,6 +23,7 @@ def test_api_project_get(app):
         res = client.get("/api/project")
     json_data = res.get_json()[0]
 
+    assert json_data["id"] == 1
     assert json_data["title"] == "test"
     assert json_data["meta"] == '["meta", "testing"]'
     assert json.loads(json_data["meta"]) == ["meta", "testing"]
@@ -44,6 +45,7 @@ def test_api_project_post(app):
         )
     json_data = res.get_json()
 
+    assert json_data["id"] == 1
     assert json_data["title"] == "test"
     assert json_data["meta"] == '["meta", "testing"]'
     assert json.loads(json_data["meta"]) == ["meta", "testing"]
@@ -65,6 +67,7 @@ def test_api_project_patch(app):
         )
     json_data = res.get_json()
 
+    assert json_data["id"] == 1
     assert json_data["title"] == "test"
     assert json_data["meta"] == '["meta", "testing"]'
     assert json.loads(json_data["meta"]) == ["meta", "testing"]
@@ -94,6 +97,7 @@ def test_api_project_get_by_id(app):
         res = client.get("/api/project/1")
     json_data = res.get_json()
 
+    assert json_data["id"] == 1
     assert json_data["title"] == "test"
     assert json_data["meta"] == '["meta", "testing"]'
     assert json.loads(json_data["meta"]) == ["meta", "testing"]
@@ -195,6 +199,17 @@ def test_api_project_post_bad_payload(app):
             json=invalid_payload,
             headers={"Authorization": f"Bearer {project_token}"},
         )
+    json_data = res.get_json()
+
+    assert json_data["success"] is False
+    assert json_data["error"] == 400
+    assert "sent a request that this server could not understand" in json_data["message"]
+
+
+def test_api_project_post_no_payload(app):
+    """Test api POST /api/project endpoint no payload"""
+    with app.test_client() as client:
+        res = client.post("/api/project", headers={"Authorization": f"Bearer {project_token}"},)
     json_data = res.get_json()
 
     assert json_data["success"] is False
