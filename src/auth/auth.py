@@ -5,9 +5,8 @@ from jose import jwt
 from urllib.request import urlopen
 
 
-AUTH0_DOMAIN = "coffe-shop-project.auth0.com"
+AUTH0_DOMAIN = "mothership-v2.us.auth0.com"
 ALGORITHMS = ["RS256"]
-API_AUDIENCE = "drinks"  # Should be lattes
 
 
 class AuthError(Exception):
@@ -54,7 +53,7 @@ def check_permissions(permission, payload):
     return True
 
 
-def verify_decode_jwt(token):  # noqa: C901
+def verify_decode_jwt(token, audience):  # noqa: C901
     """Checks if the jwt has been tampered with"""
     # Get auth0 public key
     jsonurl = urlopen(f"https://{AUTH0_DOMAIN}/.well-known/jwks.json")
@@ -91,7 +90,7 @@ def verify_decode_jwt(token):  # noqa: C901
                 token,
                 rsa_key,
                 algorithms=ALGORITHMS,
-                audience=API_AUDIENCE,
+                audience=audience,
                 issuer="https://" + AUTH0_DOMAIN + "/",
             )
 
@@ -113,7 +112,7 @@ def verify_decode_jwt(token):  # noqa: C901
     )
 
 
-def requires_auth(permission=""):
+def requires_auth(permission="", audience=""):
     """Auth decorator for routes"""
 
     def requires_auth_decorator(f):
@@ -121,7 +120,7 @@ def requires_auth(permission=""):
         def wrapper(*args, **kwargs):
             try:
                 jwt = get_token_auth_header()
-                payload = verify_decode_jwt(jwt)
+                payload = verify_decode_jwt(jwt, audience)
             except AuthError as err:
                 raise AuthError(
                     err.description, err.code,

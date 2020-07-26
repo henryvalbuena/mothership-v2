@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, patch
 from sqlalchemy.exc import OperationalError, IntegrityError
 from sqlalchemy.orm.exc import NoResultFound
 
-from tests.auth0_token import test_token
+from tests.auth0_token import latte_token
 from tests.conftest import (
     DummyLatte,
     invalid_payload,
@@ -14,7 +14,7 @@ from tests.conftest import (
     valid_payload,
 )
 
-test_token = test_token()
+latte_token = latte_token()
 
 
 def test_server_running(app):
@@ -65,7 +65,7 @@ def test_201_api_latte_post(app):
         res = client.post(
             "/api/latte",
             json=valid_payload,
-            headers={"Authorization": f"Bearer {test_token}"},
+            headers={"Authorization": f"Bearer {latte_token}"},
         )
     json_data = res.get_json()
     assert res.status_code == 201
@@ -79,7 +79,7 @@ def test_400_api_latte_post(app):
         res = client.post(
             "/api/latte",
             json=invalid_payload,
-            headers={"Authorization": f"Bearer {test_token}"},
+            headers={"Authorization": f"Bearer {latte_token}"},
         )
     json_data = res.get_json()
     assert json_data["error"] == 400
@@ -95,7 +95,7 @@ def test_409_api_latte_post(app):
         res = client.post(
             "/api/latte",
             json=valid_payload,
-            headers={"Authorization": f"Bearer {test_token}"},
+            headers={"Authorization": f"Bearer {latte_token}"},
         )
     json_data = res.get_json()
     assert json_data["error"] == 409
@@ -109,7 +109,7 @@ def test_200_api_latte_patch(app):
         res = client.patch(
             "/api/latte/1",
             json=valid_payload,
-            headers={"Authorization": f"Bearer {test_token}"},
+            headers={"Authorization": f"Bearer {latte_token}"},
         )
     json_data = res.get_json()
     assert res.status_code == 200
@@ -123,7 +123,7 @@ def test_404_api_latte_id(app):
     """Test GET /api/latte/1 endpoint not found latte"""
     with app.test_client() as client:
         res = client.get(
-            "/api/latte/2", headers={"Authorization": f"Bearer {test_token}"},
+            "/api/latte/2", headers={"Authorization": f"Bearer {latte_token}"},
         )
     json_data = res.get_json()
     assert json_data["error"] == 404
@@ -139,7 +139,7 @@ def test_404_api_latte_patch(app):
         res = client.patch(
             "/api/latte/2",
             json=valid_payload,
-            headers={"Authorization": f"Bearer {test_token}"},
+            headers={"Authorization": f"Bearer {latte_token}"},
         )
     json_data = res.get_json()
     assert json_data["error"] == 404
@@ -153,7 +153,7 @@ def test_400_api_latte_patch(app):
         res = client.patch(
             "/api/latte/1",
             json=wrong_payload,
-            headers={"Authorization": f"Bearer {test_token}"},
+            headers={"Authorization": f"Bearer {latte_token}"},
         )
     json_data = res.get_json()
     assert json_data["error"] == 400
@@ -165,7 +165,7 @@ def test_200_api_latte_delete(app):
     """Test DELETE /api/latte/1 endpoint"""
     with app.test_client() as client:
         res = client.delete(
-            "/api/latte/1", headers={"Authorization": f"Bearer {test_token}"},
+            "/api/latte/1", headers={"Authorization": f"Bearer {latte_token}"},
         )
     json_data = res.get_json()
     assert res.status_code == 200
@@ -179,7 +179,7 @@ def test_404_api_latte_delete(app):
     """Test DELETE /api/latte/1 endpoint not found"""
     with app.test_client() as client:
         res = client.delete(
-            "/api/latte/2", headers={"Authorization": f"Bearer {test_token}"},
+            "/api/latte/2", headers={"Authorization": f"Bearer {latte_token}"},
         )
     json_data = res.get_json()
     assert json_data["error"] == 404
@@ -202,7 +202,7 @@ def test_500_api_latte(app):
 
     with app.test_client() as client:
         res = client.post(
-            "/api/latte", headers={"Authorization": f"Bearer {test_token}"},
+            "/api/latte", headers={"Authorization": f"Bearer {latte_token}"},
         )
     json_data = res.get_json()
     assert json_data["error"] == 500
@@ -210,7 +210,7 @@ def test_500_api_latte(app):
 
     with app.test_client() as client:
         res = client.patch(
-            "/api/latte/1", headers={"Authorization": f"Bearer {test_token}"},
+            "/api/latte/1", headers={"Authorization": f"Bearer {latte_token}"},
         )
     json_data = res.get_json()
     assert json_data["error"] == 500
@@ -218,7 +218,7 @@ def test_500_api_latte(app):
 
     with app.test_client() as client:
         res = client.delete(
-            "/api/latte/1", headers={"Authorization": f"Bearer {test_token}"},
+            "/api/latte/1", headers={"Authorization": f"Bearer {latte_token}"},
         )
     json_data = res.get_json()
     assert json_data["error"] == 500
@@ -251,7 +251,7 @@ def test_502_api_latte_get_delete_patch(app):
     with app.test_client() as client:
         res = client.patch(
             "/api/latte/1",
-            headers={"Authorization": f"Bearer {test_token}"},
+            headers={"Authorization": f"Bearer {latte_token}"},
             json=valid_payload,
         )
     json_data = res.get_json()
@@ -260,7 +260,7 @@ def test_502_api_latte_get_delete_patch(app):
 
     with app.test_client() as client:
         res = client.delete(
-            "/api/latte/1", headers={"Authorization": f"Bearer {test_token}"},
+            "/api/latte/1", headers={"Authorization": f"Bearer {latte_token}"},
         )
     json_data = res.get_json()
     assert json_data["error"] == 502
@@ -277,7 +277,7 @@ def test_502_api_latte_post(app):
         res = client.post(
             "/api/latte",
             json=dummy_payload,
-            headers={"Authorization": f"Bearer {test_token}"},
+            headers={"Authorization": f"Bearer {latte_token}"},
         )
     json_data = res.get_json()
     assert json_data["error"] == 502
@@ -290,7 +290,7 @@ def test_invalid_user_input_post(app):
         res = client.post(
             "/api/latte",
             json=invalid_payload,
-            headers={"Authorization": f"Bearer {test_token}"},
+            headers={"Authorization": f"Bearer {latte_token}"},
         )
     json_data = res.get_json()
     assert json_data["error"] == 400

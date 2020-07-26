@@ -3,6 +3,7 @@ from flask_cors import CORS
 
 from src.database.persistence import db, migrate
 from src.apis.lattes import lattes_bp
+from src.apis.projects import projects_bp
 from src.auth.auth import AuthError
 
 
@@ -16,6 +17,7 @@ def create_app(config_name: str) -> Flask:
 
     app = Flask(__name__)
     app.register_blueprint(lattes_bp)
+    app.register_blueprint(projects_bp)
     config_module = f"src.config.{config_name.capitalize()}Config"
     app.config.from_object(config_module)
     CORS(app, resources={r"/api/*": {"origins": "*"}})
