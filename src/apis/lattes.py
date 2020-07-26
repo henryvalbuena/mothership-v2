@@ -12,6 +12,7 @@ from src.helpers.errors import InvalidUserInput
 
 
 lattes_bp = Blueprint("lattes_bp", __name__)
+AUDIENCE = "latte"
 
 
 @lattes_bp.route("/api/latte")
@@ -46,7 +47,7 @@ def get_latte(latte_id):
 
 
 @lattes_bp.route("/api/latte", methods=["POST"])
-@requires_auth(permission="post:latte")
+@requires_auth(permission="post:latte", audience=AUDIENCE)
 def create_lattes(jwt):
     """Create new latte"""
     try:
@@ -72,7 +73,7 @@ def create_lattes(jwt):
 
 
 @lattes_bp.route("/api/latte/<int:latte_id>", methods=["PATCH"])
-@requires_auth(permission="patch:latte")
+@requires_auth(permission="patch:latte", audience=AUDIENCE)
 def update_drink(jwt, latte_id):
     """Update latte information"""
     try:
@@ -104,7 +105,7 @@ def update_drink(jwt, latte_id):
 
 
 @lattes_bp.route("/api/latte/<int:latte_id>", methods=["DELETE"])
-@requires_auth(permission="delete:latte")
+@requires_auth(permission="delete:latte", audience=AUDIENCE)
 def remove_drink(jwt, latte_id):
     """Remove latte based on its id"""
     try:

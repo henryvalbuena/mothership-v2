@@ -9,9 +9,7 @@ import pytest
 
 from src.api import create_app
 from src.database.persistence import db
-from src.auth.auth import requires_auth
-
-AUTH0_DOMAIN = "coffe-shop-project.auth0.com"
+from src.auth.auth import requires_auth, AUTH0_DOMAIN
 
 
 class DummyLatte:
@@ -148,8 +146,8 @@ jsonurl = urlopen(f"https://{AUTH0_DOMAIN}/.well-known/jwks.json")
 jwks = {"loads.return_value": json.loads(jsonurl.read())}
 
 
-def get_access(permission):
-    @requires_auth(permission)
+def get_access(permission, audiente):
+    @requires_auth(permission, audiente)
     def deco(jwt):
         return jwt
 

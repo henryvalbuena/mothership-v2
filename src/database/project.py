@@ -30,7 +30,7 @@ class Project(db.Model):
         return {
             "id": self.id,
             "title": self.title,
-            "meta": json.dumps(self.meta),
+            "meta": json.loads(self.meta),
             "description": self.description,
             "image": self.image,
             "git_repo": self.git_repo,
@@ -62,9 +62,8 @@ class Project(db.Model):
             Examples:
                 TODO
         """
-        self.id = id
         self.title = title
-        self.meta = meta
+        self.meta = json.dumps(meta)
         self.description = description
         self.image = image
         self.git_repo = git_repo
