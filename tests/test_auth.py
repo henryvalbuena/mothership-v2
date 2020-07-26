@@ -10,7 +10,13 @@ from src.auth.auth import (
     verify_decode_jwt,
 )
 from tests.auth0_token import latte_token, project_token
-from tests.conftest import exp_latte_token, exp_project_token, get_access, jwks, mocked_request as request
+from tests.conftest import (
+    exp_latte_token,
+    exp_project_token,
+    get_access,
+    jwks,
+    mocked_request as request,
+)
 
 latte_token = latte_token()
 project_token = project_token()
